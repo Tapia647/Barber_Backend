@@ -1,87 +1,92 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { Appointment } from '../entities/Appointment.js';
 import { AppointmentService } from '../services/appointment.service.js';
 
-import { EntityManager } from '@mikro-orm/core';
 import { handlerError } from '../utils/error.handler.js';
 
 
 
-// Si tienes rutas específicas para Appointment
+function zanetizeAppointmentInput(req: Request, res: Response, next: NextFunction ) {
+  req.body.zanetizeAppointmentInput = {
+    IDappointment: req.body.IDappointment,
+    client: req.body.client,
+    payment: req.body.payment,
+    dateAppointment: req.body.dateAppointment,
+    time: req.body.time,
+  }
+  
+  //more checks
+ Object.keys(req.body.zanetizeAppointmentInput).forEach((key) => {
+  const value = req.body.zanetizeAppointmentInput[key]
+  if (
+    value === undefined ||
+    value === null ||
+    (typeof value === "string" && value.trim() === "")
+    ) {
+    delete req.body.zanetizeAppointmentInput[key]
+    }
+  })
+
+  next()
+}
+
+
+
 
 export class AppointmentController {
 
   constructor(private appointmentService: AppointmentService){}
-
-
   
-  async createAppointment(req: Request, res: Response){
+
+  //cambio a funciones flechas para limpiar routes ya que al usar el async dependemos del this que señala la instancia a la que se asocia el objeto
+  // con async express puede perder el contexto de this, porque pasa la funcion como callback
+  //func flecha hace que de por si ya esta implicito el objeto y el router se puede trabajar mas simple
+  
+  
+  // CREATE
+   createAppointment = (req: Request, res: Response): void => {
     try{
-      const appointment = await this.appointmentService.createAppointment();
-      res.status(201).json(appointment);
+      const { body } = req;
+      res.send(body);
     } catch (error : any){
       handlerError(res, 'appointment error: ')
-
     }
-
-
   }
-
-
 
 
   // READ
 
-  async getAllAppointments(req: Request, res: Response) {
+  getAllAppointments = (req: Request, res: Response) => {
     try {
-      const appointments = await this.appointmentService.getAllAppointments();
-      res.json(appointments);
     } catch (error: any) {
       handlerError(res,  'Error creating appointment: ')
     } 
-  };
+  }
   
-  async getAppointmentById(req: Request, res: Response) {
+
+  getAppointmentById = (req: Request, res: Response) => {
     try {
-      const appointment = await this.appointmentService.getAppointmentById(
-        parseInt(req.params.id)
-      );
-      if (!appointment) {
-        return res.status(404).json({ message: "Appointment not found" });
-      }
-      res.json(appointment);
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      handlerError(res,  'Error creating appointment: ')
     }
   }
+
 
   // UPDATE
-  async updateAppointment(req: Request, res: Response) {
+  updateAppointment = (req: Request, res: Response) => {
     try {
-      const appointment = await this.appointmentService.updateAppointment(
-        parseInt(req.params.id),
-        req.body
-      );
-      res.json(appointment);
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      handlerError(res,  'Error creating appointment: ')
     }
   }
 
-  /*/ DELETE
-  async deleteAppointment(req: Request, res: Response) {
+
+  // DELETE
+  removeAppointment = (req: Request, res: Response) => {
     try {
-      await this.appointmentService.deleteAppointment(parseInt(req.params.id));
-      res.status(204).send();
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      handlerError(res, 'Error deleting appointment: ')
     }
   }
-}*/
-async remove(req: Request, res: Response) {
-  try {
-  } catch (error: any) {
-    handlerError(res, 'Error deleting appointment: ')
-  }
-}
+
 }

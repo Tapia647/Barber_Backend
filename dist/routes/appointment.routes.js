@@ -1,21 +1,16 @@
 import { Router } from "express";
-// import { AppointmentService } from '../services/appointment.service.js';
-/*const router = Router();
-const appointmentController = new AppointmentController(orm.em);
-
-// ahora usás la instancia
-router.get("/", appointmentController.getAllAppointments);
-router.get("/:id", appointmentController.getAppointmentById);
-router.post("/", appointmentController.createAppointment);
-router.put("/:id", appointmentController.updateAppointment);
-router.delete("/:id", appointmentController.deleteAppointment);
-
-export default router;
-*/
+import { AppointmentController } from "../controllers/appointment.controller.js";
+import { AppointmentService } from "../services/appointment.service.js";
+import { AppointmentRepository } from "../shared/db/repository/appointment.repository.js";
+import { orm } from "../shared/db/orm.js";
+import { ClientService } from "../services/client.service.js";
 const router = Router();
-router.get("/");
-router.get("/:id", getAppointmentById);
-router.post("/", postAppointment);
-router.put("/:id");
-router.patch();
+const em = orm.em;
+const repository = new AppointmentRepository(em);
+const client = new ClientService(em);
+const service = new AppointmentService(repository, em, client);
+const controller = new AppointmentController(service);
+router.post("/", controller.createAppointment);
+export { router as appointmentRouter };
+//recodar no hacer nunca mas a mano las dependencias :(
 //# sourceMappingURL=appointment.routes.js.map

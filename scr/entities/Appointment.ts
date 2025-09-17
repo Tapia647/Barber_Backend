@@ -2,6 +2,13 @@ import { Entity, PrimaryKey, Property, ManyToOne, OneToOne, Rel } from "@mikro-o
 import { Client } from "./Client.js"
 import { Payment } from "./Payment.js"
 
+export enum AppointmentState{
+  Pending = 'pending',
+  Confirmed = 'confirmed',
+  Completed = 'completed',
+  Cancelled = 'cancelled'
+}
+
 @Entity()
 export class Appointment {
   @PrimaryKey()
@@ -20,6 +27,6 @@ export class Appointment {
   time!: string;
 
   @Property()
-  state!: 'pending'| 'completed' | 'canceled';
+  state: AppointmentState = AppointmentState.Pending
 
 }

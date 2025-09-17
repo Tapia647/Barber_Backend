@@ -1,22 +1,15 @@
 import { Router } from "express";
 import { ClientController} from "../controllers/client.controller.js";
-import { orm } from "../shared/db/orm.js";
-// import { AppointmentService } from '../services/appointment.service.js';
+
+
 
 const router = Router();
-const clientController = new ClientController(orm.em);
+const controller = new ClientController();
 
-// ahora usás la instancia
-/*router.get("/", clientController.getAllClients);
-router.get("/:id", clientController.getClientById);
-router.post("/", clientController.createClient);
-router.put("/:id", clientController.updateClient);
-router.delete("/:id", clientController.deleteClient);*/
+router.post("/", controller.createClient)
+router.get("/", controller.getClients)
+router.get("/:id", controller.getClientByID)
+router.patch("/:id", controller.updateClient)
+router.delete("/:id", controller.removeClient)
 
-router.get("/", clientController.getAllClients.bind(clientController));
-router.get("/:id", clientController.getClientById.bind(clientController));
-router.post("/", clientController.createClient.bind(clientController));
-router.put("/:id", clientController.updateClient.bind(clientController));
-router.delete("/:id", clientController.deleteClient.bind(clientController));
-
-export default router;
+export {router as clientRouter};

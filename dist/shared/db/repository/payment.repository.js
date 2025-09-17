@@ -9,5 +9,8 @@ export class PaymentRepository extends EntityRepository {
     async remove(payment) {
         await this.em.persistAndFlush(payment);
     }
+    async getPayment() {
+        return await this.findAll();
+    }
 }
 //# sourceMappingURL=payment.repository.js.map

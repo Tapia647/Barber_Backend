@@ -1,44 +1,45 @@
-import { Payment } from "../entities/Payment.js";
+import { handlerError } from "../utils/error.handler.js";
 export class PaymentController {
-    constructor(em) {
-        this.em = em;
-        this.paymentRepository = em.getRepository(Payment);
-    }
-    //create
-    async setPayment(params) {
-        const payment = new Payment();
-        payment.amount = params.amount;
-        payment.methodPayment = params.methodPayment;
-        await this.paymentRepository.save(payment);
-        return payment;
-    }
-    //read
-    async getAllPayments() {
-        return await this.paymentRepository.findAll();
-    }
-    async getPaymentById(id) {
-        return await this.em.findOne(Payment, { IDpayment: id });
-    }
-    //update
-    async updatePayment(id, params) {
-        const payment = await this.getPaymentById(id);
-        if (!payment) {
-            throw new Error('Payment not found');
-        }
-        if (params.amount !== undefined)
-            payment.amount = params.amount;
-        if (params.methodPayment !== undefined)
-            payment.methodPayment = params.methodPayment;
-        await this.paymentRepository.save(payment);
-        return payment;
-    }
-    //delete
-    async deletePayment(id) {
-        const payment = await this.getPaymentById(id);
-        if (!payment) {
-            throw new Error('Payment not found');
-        }
-        await this.paymentRepository.remove(payment);
+    constructor() {
+        // CREATE
+        this.createPayment = (req, res) => {
+            try {
+            }
+            catch (e) {
+                handlerError(res, 'payment not created');
+            }
+        };
+        // READ
+        this.getPayments = (req, res) => {
+            try {
+            }
+            catch (e) {
+                handlerError(res, 'payment not created');
+            }
+        };
+        this.getPaymentByID = (req, res) => {
+            try {
+            }
+            catch (e) {
+                handlerError(res, 'payment not created');
+            }
+        };
+        // UPDATE
+        this.updatePayment = (req, res) => {
+            try {
+            }
+            catch (e) {
+                handlerError(res, 'payment not created');
+            }
+        };
+        // DELETE
+        this.removePayment = (req, res) => {
+            try {
+            }
+            catch (e) {
+                handlerError(res, 'payment not deleted');
+            }
+        };
     }
 }
 //# sourceMappingURL=payment.controller.js.map

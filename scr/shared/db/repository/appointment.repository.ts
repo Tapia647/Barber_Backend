@@ -1,9 +1,12 @@
-import { EntityRepository } from "@mikro-orm/mysql";
+import { EntityRepository, SqlEntityManager } from "@mikro-orm/mysql";
 import { Appointment } from "../../../entities/Appointment.js";
 
 
 export class AppointmentRepository extends EntityRepository<Appointment> {
 
+  constructor(em: SqlEntityManager) {
+    super(em, Appointment); 
+  }
 
   async save(appointment: Appointment): Promise<void> {
     await this.em.persistAndFlush(appointment)

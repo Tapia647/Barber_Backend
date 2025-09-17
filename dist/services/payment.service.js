@@ -1,44 +1,34 @@
+import { Appointment } from "../entities/Appointment.js";
 import { Payment } from "../entities/Payment.js";
 export class PaymentService {
     constructor(em) {
         this.em = em;
         this.paymentRepository = em.getRepository(Payment);
+        this.appointmentRepository = em.getRepository(Appointment);
     }
     //create
-    async setPayment(params) {
-        const payment = new Payment();
-        payment.amount = params.amount;
-        payment.methodPayment = params.methodPayment;
-        await this.paymentRepository.save(payment);
-        return payment;
+    async createPayment(IDpayment, amount, methodPayment, IDappointment) {
+        const xappointment = await this.appointmentRepository.getAppointmentById(IDappointment);
+        if (!xappointment) {
+            throw new Error("Appointment not found");
+        }
+        else {
+            const existingPayment = await this.paymentRepository.getPaymentbyID(IDpayment);
+            if (!existingPayment) {
+                throw new Error("Payment cannot create");
+            }
+            else {
+                const payment = new Payment();
+                payment.amount = amount;
+                payment.methodPayment = methodPayment;
+                await this.paymentRepository.save(payment);
+                return payment;
+            }
+        }
     }
     //read
     async getAllPayments() {
         return await this.paymentRepository.findAll();
-    }
-    async getPaymentById(id) {
-        return await this.em.findOne(Payment, { IDpayment: id });
-    }
-    //update
-    async updatePayment(id, params) {
-        const payment = await this.getPaymentById(id);
-        if (!payment) {
-            throw new Error('Payment not found');
-        }
-        if (params.amount !== undefined)
-            payment.amount = params.amount;
-        if (params.methodPayment !== undefined)
-            payment.methodPayment = params.methodPayment;
-        await this.paymentRepository.save(payment);
-        return payment;
-    }
-    //delete
-    async deletePayment(id) {
-        const payment = await this.getPaymentById(id);
-        if (!payment) {
-            throw new Error('Payment not found');
-        }
-        await this.paymentRepository.remove(payment);
     }
 }
 //# sourceMappingURL=payment.service.js.map

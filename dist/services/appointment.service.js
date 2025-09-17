@@ -1,53 +1,63 @@
 import { Appointment } from "../entities/Appointment.js";
 export class AppointmentService {
-    constructor(em) {
+    constructor(appointmentRepository, em, clientService) {
+        this.appointmentRepository = appointmentRepository;
         this.em = em;
-        this.appointmentRepository = em.getRepository(Appointment);
+        this.clientService = clientService;
     }
     //create
-    async setAppointment(params) {
-        const appointment = new Appointment();
-        appointment.date = params.date;
-        appointment.time = params.time;
-        appointment.state = params.state;
-        appointment.client = params.client;
-        appointment.payment = params.payment;
-        await this.appointmentRepository.save(appointment);
-        return appointment;
-    }
-    //read
-    async getAllAppointments() {
-        return await this.appointmentRepository.findAll();
-    }
-    async getAppointmentById(id) {
-        return await this.em.findOne(Appointment, { IDappointment: id });
-    }
-    //update
-    async updateAppointment(id, params) {
-        const appointment = await this.getAppointmentById(id);
-        if (!appointment) {
-            throw new Error('Appointment not found');
+    async createAppointment(dateAppointment, time, IDclient) {
+        const aclient = await this.clientService.getClient(IDclient);
+        if (!aclient) {
+            throw new Error('Client not found');
         }
-        if (params.date !== undefined)
-            appointment.date = params.date;
-        if (params.time !== undefined)
-            appointment.time = params.time;
-        if (params.state !== undefined)
-            appointment.state = params.state;
-        if (params.client !== undefined)
-            appointment.client = params.client;
-        if (params.payment !== undefined)
-            appointment.payment = params.payment;
-        await this.appointmentRepository.save(appointment);
-        return appointment;
+        else {
+            const existingAppointment = await this.appointmentRepository.findByDateTime(dateAppointment, time);
+            if (existingAppointment) {
+                throw new Error('An appointment already exists at the specified date and time');
+            }
+            else {
+                const newAppointment = new Appointment();
+                newAppointment.dateAppointment = dateAppointment;
+                newAppointment.time = time;
+                newAppointment.client = aclient;
+                await this.appointmentRepository.save(newAppointment);
+                return newAppointment;
+            }
+        }
+    }
+    // Read 
+    async getAllAppointments() {
+        return await this.appointmentRepository.getAppointments();
+    }
+    async getAppointment(IDappointment) {
+        return await this.appointmentRepository.getAppointmentById(IDappointment);
+    }
+    //Update
+    async updateAppointment(dateAppointment, time, IDclient) {
+        const aclient = await this.clientService.getClient(IDclient);
+        if (!aclient) {
+            throw Error("Client not found");
+        }
+        const existingAppointment = await this.appointmentRepository.findByDateTime(dateAppointment, time);
+        if (!existingAppointment) {
+            throw Error('Appointment not found');
+        }
+        else {
+            existingAppointment.dateAppointment = dateAppointment;
+            existingAppointment.time = time;
+            await this.appointmentRepository.save(existingAppointment);
+            return existingAppointment;
+        }
     }
     //delete
     async deleteAppointment(id) {
-        const appointment = await this.getAppointmentById(id);
+        const appointment = await this.appointmentRepository.getAppointmentById(id);
         if (!appointment) {
-            throw new Error('Appointment not found');
+            throw new Error("Appointment cannot delete because appointment not found");
         }
         await this.appointmentRepository.remove(appointment);
+        return true; //true delete/ false not found
     }
 }
 //# sourceMappingURL=appointment.service.js.map

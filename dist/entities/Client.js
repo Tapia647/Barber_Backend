@@ -7,11 +7,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Collection, Entity, OneToMany, PrimaryKey, Property, Cascade, BaseEntity } from "@mikro-orm/core";
+import { Collection, Entity, OneToMany, PrimaryKey, Property, Cascade } from "@mikro-orm/core";
 import { Appointment } from "./Appointment.js";
-export let Client = class Client extends BaseEntity {
+export let Client = class Client {
     constructor() {
-        super(...arguments);
         this.appointments = new Collection(this);
     }
 };
@@ -29,7 +28,7 @@ __decorate([
 ], Client.prototype, "name", void 0);
 __decorate([
     Property(),
-    __metadata("design:type", String)
+    __metadata("design:type", Number)
 ], Client.prototype, "phone", void 0);
 __decorate([
     Property({ nullable: true }),

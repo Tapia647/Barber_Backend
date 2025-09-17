@@ -1,60 +1,47 @@
-import { BarberService } from "../services/barber.service.js";
+import { handlerError } from "../utils/error.handler.js";
 export class BarberController {
-    constructor(em) {
-        this.em = em;
-        this.barberService = new BarberService(em);
-    }
-    // CREATE
-    async createBarber(req, res) {
-        try {
-            const barber = await this.barberService.setBarber(req.body);
-            res.status(201).json(barber);
-        }
-        catch (error) {
-            res.status(500).json({ message: error.message });
-        }
-    }
-    // READ
-    async getAllBarbers(req, res) {
-        try {
-            const barbers = await this.barberService.getAllBarbers();
-            res.json(barbers);
-        }
-        catch (error) {
-            res.status(500).json({ message: error.message });
-        }
-    }
-    async getBarberById(req, res) {
-        try {
-            const barber = await this.barberService.getBarberById(parseInt(req.params.id));
-            if (!barber) {
-                return res.status(404).json({ message: "Barber not found" });
+    constructor() {
+        // CREATE
+        this.createBarber = (req, res) => {
+            try {
+                const { body } = req;
+                res.send(body);
             }
-            res.json(barber);
-        }
-        catch (error) {
-            res.status(500).json({ message: error.message });
-        }
-    }
-    // UPDATE
-    async updateBarber(req, res) {
-        try {
-            const barber = await this.barberService.updateBarber(parseInt(req.params.id), req.body);
-            res.json(barber);
-        }
-        catch (error) {
-            res.status(500).json({ message: error.message });
-        }
-    }
-    // DELETE
-    async deleteBarber(req, res) {
-        try {
-            await this.barberService.deleteBarber(parseInt(req.params.id));
-            res.status(204).send();
-        }
-        catch (error) {
-            res.status(500).json({ message: error.message });
-        }
+            catch (error) {
+                handlerError(res, 'appointment error: ');
+            }
+        };
+        // READ
+        this.getAllBarbers = (req, res) => {
+            try {
+            }
+            catch (error) {
+                handlerError(res, 'Error creating appointment: ');
+            }
+        };
+        this.getBarberById = (req, res) => {
+            try {
+            }
+            catch (error) {
+                handlerError(res, 'Error creating appointment: ');
+            }
+        };
+        // UPDATE
+        this.updateBarber = (req, res) => {
+            try {
+            }
+            catch (error) {
+                handlerError(res, 'Error creating appointment: ');
+            }
+        };
+        // DELETE
+        this.removeBarber = (req, res) => {
+            try {
+            }
+            catch (error) {
+                handlerError(res, 'Error deleting appointment: ');
+            }
+        };
     }
 }
 //# sourceMappingURL=barber.controller.js.map

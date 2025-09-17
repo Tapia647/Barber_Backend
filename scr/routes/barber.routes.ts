@@ -4,14 +4,7 @@ import { orm } from "../shared/db/orm.js";
 
 
 const router = Router();
-const barberController = new BarberController(orm.em);
+const barberController = new BarberController();
 
-// ahora usás la instancia
 
-router.get("/", barberController.getAllBarbers);
-router.get("/:id", barberController.getBarberById);
-router.post("/", barberController.createBarber);
-router.put("/:id", barberController.updateBarber);
-router.delete("/:id", barberController.deleteBarber);
-
-export default router;
+export { router as barberRouter };

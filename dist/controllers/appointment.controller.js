@@ -1,63 +1,70 @@
-import { AppointmentService } from '../services/appointment.service.js';
 import { handlerError } from '../utils/error.handler.js';
-// Si tienes rutas específicas para Appointment
-export class AppointmentController {
-    constructor(em) {
-        this.em = em;
-        this.appointmentService = new AppointmentService(em);
-    }
-    /*/ CREATE
-   async createAppointment(req: Request, res: Response) {
-      try {
-        const appointment = await this.appointmentService.setAppointment(req.body);
-        res.status(201).json(appointment);
-      } catch (error: any) {
-        handlerError(res,  'Error creating appointment: ')
-      }
+function zanetizeAppointmentInput(req, res, next) {
+    req.body.zanetizeAppointmentInput = {
+        IDappointment: req.body.IDappointment,
+        client: req.body.client,
+        payment: req.body.payment,
+        dateAppointment: req.body.dateAppointment,
+        time: req.body.time,
     };
-  */
-    // READ
-    async getAllAppointments(req, res) {
-        try {
-            const appointments = await this.appointmentService.getAllAppointments();
-            res.json(appointments);
+    //more checks
+    Object.keys(req.body.zanetizeAppointmentInput).forEach((key) => {
+        const value = req.body.zanetizeAppointmentInput[key];
+        if (value === undefined ||
+            value === null ||
+            (typeof value === "string" && value.trim() === "")) {
+            delete req.body.zanetizeAppointmentInput[key];
         }
-        catch (error) {
-            handlerError(res, 'Error creating appointment: ');
-        }
-    }
-    ;
-    async getAppointmentById(req, res) {
-        try {
-            const appointment = await this.appointmentService.getAppointmentById(parseInt(req.params.id));
-            if (!appointment) {
-                return res.status(404).json({ message: "Appointment not found" });
+    });
+    next();
+}
+export class AppointmentController {
+    constructor(appointmentService) {
+        this.appointmentService = appointmentService;
+        //cambio a funciones flechas para limpiar routes ya que al usar el async dependemos del this que señala la instancia a la que se asocia el objeto
+        // con async express puede perder el contexto de this, porque pasa la funcion como callback
+        //func flecha hace que de por si ya esta implicito el objeto y el router se puede trabajar mas simple
+        // CREATE
+        this.createAppointment = (req, res) => {
+            try {
+                const { body } = req;
+                res.send(body);
             }
-            res.json(appointment);
-        }
-        catch (error) {
-            res.status(500).json({ message: error.message });
-        }
-    }
-    // UPDATE
-    async updateAppointment(req, res) {
-        try {
-            const appointment = await this.appointmentService.updateAppointment(parseInt(req.params.id), req.body);
-            res.json(appointment);
-        }
-        catch (error) {
-            res.status(500).json({ message: error.message });
-        }
-    }
-    // DELETE
-    async deleteAppointment(req, res) {
-        try {
-            await this.appointmentService.deleteAppointment(parseInt(req.params.id));
-            res.status(204).send();
-        }
-        catch (error) {
-            res.status(500).json({ message: error.message });
-        }
+            catch (error) {
+                handlerError(res, 'appointment error: ');
+            }
+        };
+        // READ
+        this.getAllAppointments = (req, res) => {
+            try {
+            }
+            catch (error) {
+                handlerError(res, 'Error creating appointment: ');
+            }
+        };
+        this.getAppointmentById = (req, res) => {
+            try {
+            }
+            catch (error) {
+                handlerError(res, 'Error creating appointment: ');
+            }
+        };
+        // UPDATE
+        this.updateAppointment = (req, res) => {
+            try {
+            }
+            catch (error) {
+                handlerError(res, 'Error creating appointment: ');
+            }
+        };
+        // DELETE
+        this.removeAppointment = (req, res) => {
+            try {
+            }
+            catch (error) {
+                handlerError(res, 'Error deleting appointment: ');
+            }
+        };
     }
 }
 //# sourceMappingURL=appointment.controller.js.map

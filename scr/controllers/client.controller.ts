@@ -2,68 +2,60 @@ import { Client } from "../entities/Client.js";
 import { EntityManager } from "@mikro-orm/core";
 import { Request, Response } from "express";
 import { ClientService } from "../services/client.service.js";
+import { handlerError } from "../utils/error.handler.js";
 
 // Si tienes rutas específicas para Appointment
 
 export class ClientController {
 
-private em: EntityManager;
-private clientService: ClientService;
- 
-
-constructor(em: EntityManager) {
-  this.em = em;
-  this.clientService =new ClientService(em);
-  }
+constructorr(){}
+  
   // CREATE
-   async creaClient(req: Request, res: Response) {
-    try {
-      const client = await this.createClient(req.body);
-      res.status(201).json(client);
-    } catch (error: any) {
-      res.status(500).json({ message: error.message });
+  createClient = (req: Request, res: Response) => {
+    try{
+
+    } catch (e){
+      handlerError(res, 'client not created')
     }
   }
+
+
   // READ
-    async getAllClients(req: Request, res: Response) {
-    try {
-      const clients = await this.clientService.getAllClients();
-      res.json(clients);
-    } catch (error: any) {
-      res.status(500).json({ message: error.message });
-    } }
-    async getClientById(req: Request, res: Response) {
-    try {
-      const client = await this.clientService.getClientById(
-        parseInt(req.params.id)
-      );
-      if (!client) {
-        return res.status(404).json({ message: "Client not found" });
-      }
-      res.json(client);
-    } catch (error: any) {
-      res.status(500).json({ message: error.message });
+  getClients = (req: Request, res: Response) => {
+    try{
+
+    } catch(e){
+      handlerError(res, 'clients not found')
     }
   }
+
+  getClientByID = (req: Request, res: Response) => {
+    try{
+
+    } catch(e){
+      handlerError(res, 'client not found')
+    }
+  }
+   
+
   // UPDATE
-    async updateClient(req: Request, res: Response) {
-    try {
-      const client = await this.clientService.updateClient(
-        parseInt(req.params.id),
-        req.body
-      );
-      res.json(client);
-    } catch (error: any) {
-      res.status(500).json({ message: error.message });
+  updateClient = (req: Request, res: Response) => {
+    try{
+
+    } catch(e){
+      handlerError(res, 'client not updated')
     }
   }
+    
+
   // DELETE
-    async deleteClient(req: Request, res: Response) {
-    try {
-      await this.clientService.deleteClient(parseInt(req.params.id));
-      res.status(204).send();
-    } catch (error: any) {
-      res.status(500).json({ message: error.message });
+  removeClient = (req: Request, res: Response)=> {
+    try{
+
+    } catch(e){
+      handlerError(res, 'client not deleted')
     }
   }
+    
+  
 }
