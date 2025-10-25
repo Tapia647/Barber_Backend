@@ -11,13 +11,13 @@ export enum AppointmentState{
 
 @Entity()
 export class Appointment {
-  @PrimaryKey()
+  @PrimaryKey({autoincrement:true})
   IDappointment!: number;
   
   @ManyToOne (() => Client, { nullable: false })
   client!: Rel <Client>;
   
-  @OneToOne (() => Payment)
+  @OneToOne (() => Payment, { nullable: true })
   payment!: Payment;
   
   @Property({ nullable: false })

@@ -1,35 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Appointment } from '../entities/Appointment.js';
 import { AppointmentService } from '../services/appointment.service.js';
-
 import { handlerError } from '../utils/error.handler.js';
-
-
-
-function zanetizeAppointmentInput(req: Request, res: Response, next: NextFunction ) {
-  req.body.zanetizeAppointmentInput = {
-    IDappointment: req.body.IDappointment,
-    client: req.body.client,
-    payment: req.body.payment,
-    dateAppointment: req.body.dateAppointment,
-    time: req.body.time,
-  }
-  
-  //more checks
- Object.keys(req.body.zanetizeAppointmentInput).forEach((key) => {
-  const value = req.body.zanetizeAppointmentInput[key]
-  if (
-    value === undefined ||
-    value === null ||
-    (typeof value === "string" && value.trim() === "")
-    ) {
-    delete req.body.zanetizeAppointmentInput[key]
-    }
-  })
-
-  next()
-}
-
 
 
 
@@ -44,11 +16,14 @@ export class AppointmentController {
   
   
   // CREATE
-   createAppointment = (req: Request, res: Response): void => {
+   createAppointment = async (req: Request, res: Response) => {
     try{
-      const { body } = req;
-      res.send(body);
+      console.log("Input recibido:", req.body.zanetizeAppointmentInput);
+      const { dateAppointment, time, IDclient } = req.body.zanetizeAppointmentInput;
+      const appointment = await this.appointmentService.createAppointment(dateAppointment, time, IDclient);
+      res.status(201).json(appointment);
     } catch (error : any){
+      console.error("Error en createAppointment:", error);
       handlerError(res, 'appointment error: ')
     }
   }
@@ -56,16 +31,21 @@ export class AppointmentController {
 
   // READ
 
-  getAllAppointments = (req: Request, res: Response) => {
+  getAllAppointments = async (req: Request, res: Response) => {
     try {
+      const getAppointments = await this.appointmentService.getAllAppointments();
+      res.status(200).json(getAppointments);
     } catch (error: any) {
       handlerError(res,  'Error creating appointment: ')
     } 
   }
   
 
-  getAppointmentById = (req: Request, res: Response) => {
+  getAppointmentById = async (req: Request, res: Response) => {
     try {
+      const { id } =  req.params;
+      const getAppointment = await this.appointmentService.getAppointmentByID(Number(id));
+      res.status(200).json(getAppointment);
     } catch (error: any) {
       handlerError(res,  'Error creating appointment: ')
     }
@@ -73,8 +53,11 @@ export class AppointmentController {
 
 
   // UPDATE
-  updateAppointment = (req: Request, res: Response) => {
+  updateAppointment = async (req: Request, res: Response) => {
     try {
+      const { dateAppointment, time, IDclient } = req.body.zanetizeAppointmentInput;
+      const updateAppointment = await this.appointmentService.updateAppointment(dateAppointment, time, IDclient);
+      res.status(200).json(updateAppointment);
     } catch (error: any) {
       handlerError(res,  'Error creating appointment: ')
     }
@@ -82,8 +65,11 @@ export class AppointmentController {
 
 
   // DELETE
-  removeAppointment = (req: Request, res: Response) => {
+  removeAppointment = async (req: Request, res: Response) => {
     try {
+     const IDappointment = parseInt(req.params.id);
+      const deleteAppointment = await this.appointmentService.deleteAppointment(IDappointment);
+      res.status(200).json(deleteAppointment);
     } catch (error: any) {
       handlerError(res, 'Error deleting appointment: ')
     }

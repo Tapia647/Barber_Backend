@@ -1,4 +1,5 @@
 import { Appointment } from "../entities/Appointment.js";
+import { AppointmentState } from "../entities/Appointment.js";
 export class AppointmentService {
     constructor(appointmentRepository, em, clientService) {
         this.appointmentRepository = appointmentRepository;
@@ -21,6 +22,7 @@ export class AppointmentService {
                 newAppointment.dateAppointment = dateAppointment;
                 newAppointment.time = time;
                 newAppointment.client = aclient;
+                newAppointment.state = AppointmentState.Confirmed;
                 await this.appointmentRepository.save(newAppointment);
                 return newAppointment;
             }
@@ -56,6 +58,7 @@ export class AppointmentService {
         if (!appointment) {
             throw new Error("Appointment cannot delete because appointment not found");
         }
+        appointment.state = AppointmentState.Cancelled;
         await this.appointmentRepository.remove(appointment);
         return true; //true delete/ false not found
     }

@@ -9,7 +9,7 @@ export class ClientRepository extends EntityRepository<Client>{
   }
 
   async remove(client: Client): Promise<void> {
-    await this.em.persistAndFlush(client)
+    await this.em.removeAndFlush(client)
   }
 
   async getClientByEmail(email: string): Promise<Client | null> {

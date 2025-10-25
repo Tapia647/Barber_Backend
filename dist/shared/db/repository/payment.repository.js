@@ -7,7 +7,7 @@ export class PaymentRepository extends EntityRepository {
         return await this.findOne({ IDpayment: id });
     }
     async remove(payment) {
-        await this.em.persistAndFlush(payment);
+        await this.em.removeAndFlush(payment);
     }
     async getPayment() {
         return await this.findAll();

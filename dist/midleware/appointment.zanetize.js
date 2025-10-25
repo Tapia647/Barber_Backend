@@ -1,13 +1,13 @@
-export class ZanetizeClient {
-    // método estático para usar directamente sin instanciar
+export class ZanetizeAppointment {
     static sanitize(req, res, next) {
         // copiamos solo los campos esperados
         const input = {
-            name: req.body.name,
-            phone: req.body.phone,
-            email: req.body.email,
+            IDappointment: req.body.IDappointment,
+            IDclient: req.body.IDclient,
+            payment: req.body.payment,
+            dateAppointment: req.body.dateAppointment,
+            time: req.body.time,
         };
-        // eliminamos campos vacíos o inválidos
         Object.keys(input).forEach((key) => {
             const value = input[key];
             if (value === undefined ||
@@ -16,8 +16,8 @@ export class ZanetizeClient {
                 delete input[key];
             }
         });
-        req.body.zanetizeClientInput = input;
+        req.body.zanetizeAppointmentInput = input;
         next();
     }
 }
-//# sourceMappingURL=client.zanetize.js.map
+//# sourceMappingURL=appointment.zanetize.js.map

@@ -13,6 +13,6 @@ export class BarberRepository extends EntityRepository<Barber>{
 
 
     async remove(barber: Barber): Promise<void> {
-      await this.em.persistAndFlush(barber);}
+      await this.em.removeAndFlush(barber);}
 
     }

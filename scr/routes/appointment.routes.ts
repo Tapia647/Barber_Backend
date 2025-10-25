@@ -6,6 +6,7 @@ import { orm } from "../shared/db/orm.js"
 import { ClientService } from "../services/client.service.js";
 import { ClientRepository } from "../shared/db/repository/client.repository.js";
 import { Client } from "../entities/Client.js";
+import { ZanetizeAppointment } from "../midleware/appointment.zanetize.js";
 
 const router = Router();
 
@@ -18,10 +19,10 @@ const client = new ClientService(clientRepository, em);
 const service = new AppointmentService(appointmentRepository, em, client);
 const controller = new AppointmentController(service);
 
-router.post("/", controller.createAppointment);
+router.post("/", ZanetizeAppointment.sanitize,controller.createAppointment);
 router.get("/", controller.getAllAppointments);
 router.get("/:id", controller.getAppointmentById);
-router.patch("/:id", controller.updateAppointment);
+router.patch("/:id",ZanetizeAppointment.sanitize, controller.updateAppointment);
 router.delete("/:id", controller.removeAppointment);
 
 export { router as appointmentRouter };

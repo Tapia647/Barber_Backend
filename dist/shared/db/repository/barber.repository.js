@@ -7,7 +7,7 @@ export class BarberRepository extends EntityRepository {
         return await this.findOne({ IDBarber: id });
     }
     async remove(barber) {
-        await this.em.persistAndFlush(barber);
+        await this.em.removeAndFlush(barber);
     }
 }
 //# sourceMappingURL=barber.repository.js.map

@@ -12,7 +12,7 @@ export class PaymentRepository extends EntityRepository<Payment>{
       return await this.findOne({ IDpayment: id });}
   
   async remove(payment: Payment): Promise<void> {
-      await this.em.persistAndFlush(payment);}
+      await this.em.removeAndFlush(payment);}
 
   async getPayment(): Promise<Payment[]> {
           return await this.findAll()

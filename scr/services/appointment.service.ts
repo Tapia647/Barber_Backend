@@ -2,8 +2,7 @@ import { Appointment } from "../entities/Appointment.js";
 import { EntityManager } from "@mikro-orm/core";
 import { AppointmentRepository } from "../shared/db/repository/appointment.repository.js";
 import { ClientService } from "./client.service.js";
-
-
+import { AppointmentState } from "../entities/Appointment.js";
 
 export class AppointmentService {
 
@@ -25,7 +24,9 @@ export class AppointmentService {
           newAppointment.dateAppointment = dateAppointment;
           newAppointment.time = time;
           newAppointment.client = aclient;
-
+          newAppointment.state = AppointmentState.Confirmed;
+          
+          
           await this.appointmentRepository.save(newAppointment);
           return newAppointment;
           } 
@@ -68,6 +69,7 @@ export class AppointmentService {
     if (!appointment) {
       throw new Error("Appointment cannot delete because appointment not found");
     } 
+      appointment.state = AppointmentState.Cancelled;
       await this.appointmentRepository.remove(appointment);
       return true;//true delete/ false not found
   }

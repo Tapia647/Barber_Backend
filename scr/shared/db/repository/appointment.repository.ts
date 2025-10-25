@@ -13,7 +13,7 @@ export class AppointmentRepository extends EntityRepository<Appointment> {
   }
 
   async remove(appointment: Appointment): Promise<void> {
-    await this.em.persistAndFlush(appointment)
+    await this.em.removeAndFlush(appointment)
   }
 
   async getAppointmentById(id: number): Promise<Appointment | null> {

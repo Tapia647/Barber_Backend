@@ -4,7 +4,7 @@ export class ClientRepository extends EntityRepository {
         await this.em.persistAndFlush(client);
     }
     async remove(client) {
-        await this.em.persistAndFlush(client);
+        await this.em.removeAndFlush(client);
     }
     async getClientByEmail(email) {
         return await this.findOne({ email });

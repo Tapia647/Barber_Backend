@@ -8,7 +8,7 @@ export class AppointmentRepository extends EntityRepository {
         await this.em.persistAndFlush(appointment);
     }
     async remove(appointment) {
-        await this.em.persistAndFlush(appointment);
+        await this.em.removeAndFlush(appointment);
     }
     async getAppointmentById(id) {
         return await this.findOne({ IDappointment: id });

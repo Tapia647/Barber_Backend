@@ -35,8 +35,8 @@ constructor(private clientService : ClientService ){}
   // READ
   getClients = async (req: Request, res: Response) => {
     try{
-      const getClient = await this.clientService.getClients();
-      res.status(200).json(getClient);
+      const getClients = await this.clientService.getClients();
+      res.status(200).json(getClients);
     } catch(e){
       handlerError(res, 'clients not found')
     }
@@ -69,7 +69,7 @@ constructor(private clientService : ClientService ){}
   // DELETE
   removeClient = async (req: Request, res: Response)=> {
     try{
-      const {IDclient} = req.body.zanetizeClientInput;
+      const IDclient = parseInt(req.params.id);
       const deleteClient =  await this.clientService.deleteClient(IDclient);
       res.status(200).json(deleteClient);
     } catch(e){

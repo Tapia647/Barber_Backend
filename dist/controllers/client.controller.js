@@ -19,8 +19,8 @@ export class ClientController {
         // READ
         this.getClients = async (req, res) => {
             try {
-                const getClient = await this.clientService.getClients();
-                res.status(200).json(getClient);
+                const getClients = await this.clientService.getClients();
+                res.status(200).json(getClients);
             }
             catch (e) {
                 handlerError(res, 'clients not found');
@@ -50,7 +50,7 @@ export class ClientController {
         // DELETE
         this.removeClient = async (req, res) => {
             try {
-                const { IDclient } = req.body.zanetizeClientInput;
+                const IDclient = parseInt(req.params.id);
                 const deleteClient = await this.clientService.deleteClient(IDclient);
                 res.status(200).json(deleteClient);
             }

@@ -23,7 +23,7 @@ export let Appointment = class Appointment {
     }
 };
 __decorate([
-    PrimaryKey(),
+    PrimaryKey({ autoincrement: true }),
     __metadata("design:type", Number)
 ], Appointment.prototype, "IDappointment", void 0);
 __decorate([
@@ -31,7 +31,7 @@ __decorate([
     __metadata("design:type", Object)
 ], Appointment.prototype, "client", void 0);
 __decorate([
-    OneToOne(() => Payment),
+    OneToOne(() => Payment, { nullable: true }),
     __metadata("design:type", Payment)
 ], Appointment.prototype, "payment", void 0);
 __decorate([
