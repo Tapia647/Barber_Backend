@@ -3,21 +3,21 @@ import { Appointment } from "./Appointment.js";
 
 @Entity()
 export class Client {
+
   @OneToMany(() => Appointment, (appointment) => appointment.client, { cascade: [Cascade.ALL], })
   appointments = new Collection<Appointment>(this)
 
-  @PrimaryKey()
+  @PrimaryKey({autoincrement: true})
   IDclient?: number;
-
+  
   @Property()
   name!: string;
 
-  @Property()
+  @Property({type: 'bigint'})
   phone!: number;
 
-  @Property({ nullable: true })
+  @Property()
   email!: string;
-
 
 
 }

@@ -7,7 +7,7 @@ export class AppointmentService {
     }
     //create
     async createAppointment(dateAppointment, time, IDclient) {
-        const aclient = await this.clientService.getClient(IDclient);
+        const aclient = await this.clientService.getClientByID(IDclient);
         if (!aclient) {
             throw new Error('Client not found');
         }
@@ -30,12 +30,12 @@ export class AppointmentService {
     async getAllAppointments() {
         return await this.appointmentRepository.getAppointments();
     }
-    async getAppointment(IDappointment) {
+    async getAppointmentByID(IDappointment) {
         return await this.appointmentRepository.getAppointmentById(IDappointment);
     }
     //Update
     async updateAppointment(dateAppointment, time, IDclient) {
-        const aclient = await this.clientService.getClient(IDclient);
+        const aclient = await this.clientService.getClientByID(IDclient);
         if (!aclient) {
             throw Error("Client not found");
         }

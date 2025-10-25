@@ -1,5 +1,5 @@
 import { Client } from "../../../entities/Client.js";
-import { EntityRepository } from "@mikro-orm/mysql";
+import { EntityRepository } from "@mikro-orm/core";
 
 export class ClientRepository extends EntityRepository<Client>{
 
@@ -10,6 +10,10 @@ export class ClientRepository extends EntityRepository<Client>{
 
   async remove(client: Client): Promise<void> {
     await this.em.persistAndFlush(client)
+  }
+
+  async getClientByEmail(email: string): Promise<Client | null> {
+    return await this.findOne({ email });
   }
   
   async getClientByID(id: number): Promise<Client | null> {

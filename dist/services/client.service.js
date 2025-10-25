@@ -1,50 +1,51 @@
 import { Client } from "../entities/Client.js";
 export class ClientService {
-    constructor(em) {
+    constructor(clientRepository, em) {
+        this.clientRepository = clientRepository;
         this.em = em;
-        this.clientRepository = em.getRepository(Client);
     }
+    //CREATE  
     async createClient(name, phone, email) {
-        const existingClient = await this.clientRepository.findOne({ email });
-        if (!existingClient) {
-            throw new Error('client alredy exist');
+        const existingClient = await this.clientRepository.getClientByEmail(email);
+        if (existingClient) {
+            throw new Error('Client already exists');
         }
-        else {
-            const newClient = new Client();
-            newClient.name = name;
-            newClient.phone = phone;
-            newClient.email = email;
-            await this.clientRepository.save(newClient);
-            return newClient;
-        }
+        const newClient = new Client();
+        // asigna ID si tu entidad lo requiere (quita la siguiente línea si es autoincremental)
+        // newClient.IDclient = IDclient;
+        newClient.name = name;
+        newClient.phone = phone;
+        newClient.email = email;
+        await this.clientRepository.save(newClient);
+        return newClient;
     }
-    //read
-    async getAllClients() {
+    //READ
+    async getClients() {
         return await this.clientRepository.findAll();
     }
+    async getClientByID(IDclient) {
+        const iclient = await this.clientRepository.getClientByID(IDclient);
+        return iclient;
+    }
+    //UPDATE
     async updateClient(IDclient, name, email, phone) {
         const aclient = await this.clientRepository.getClientByID(IDclient);
         if (!aclient) {
             throw Error('Client not found');
         }
-        else {
-            aclient.name = name;
-            aclient.email = email;
-            aclient.phone = phone;
-            await this.clientRepository.save(aclient);
-            return aclient;
-        }
+        aclient.name = name;
+        aclient.email = email;
+        aclient.phone = phone;
+        await this.clientRepository.save(aclient);
+        return aclient;
     }
+    //DELETE
     async deleteClient(IDclient) {
         const uclient = await this.clientRepository.getClientByID(IDclient);
         if (!uclient) {
             throw new Error("Client cannot delete because client not found");
         }
         await this.clientRepository.remove(uclient);
-    }
-    async getClient(IDclient) {
-        const iclient = await this.clientRepository.getClientByID(IDclient);
-        return iclient;
     }
 }
 //# sourceMappingURL=client.service.js.map

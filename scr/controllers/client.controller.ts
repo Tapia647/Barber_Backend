@@ -3,35 +3,50 @@ import { EntityManager } from "@mikro-orm/core";
 import { Request, Response } from "express";
 import { ClientService } from "../services/client.service.js";
 import { handlerError } from "../utils/error.handler.js";
+import { NextFunction } from "express";
 
 // Si tienes rutas específicas para Appointment
 
+
+
+
+
+
+
 export class ClientController {
 
-constructorr(){}
+constructor(private clientService : ClientService ){}
   
   // CREATE
-  createClient = (req: Request, res: Response) => {
+  createClient = async (req: Request, res: Response) => {
     try{
+      console.log("Input recibido:", req.body.zanetizeClientInput);
+      const { name, email, phone } = req.body.zanetizeClientInput;
 
+      const newClient = await this.clientService.createClient( name, phone, email);
+      res.status(201).json(newClient);
     } catch (e){
+      console.error("Error en createClient:", e);
       handlerError(res, 'client not created')
     }
   }
 
 
   // READ
-  getClients = (req: Request, res: Response) => {
+  getClients = async (req: Request, res: Response) => {
     try{
-
+      const getClient = await this.clientService.getClients();
+      res.status(200).json(getClient);
     } catch(e){
       handlerError(res, 'clients not found')
     }
   }
 
-  getClientByID = (req: Request, res: Response) => {
+  getClientByID = async (req: Request, res: Response) => {
     try{
-
+      const { id } = req.params;
+      const getClient = await this.clientService.getClientByID(Number(id));
+      res.status(200).json(getClient);
     } catch(e){
       handlerError(res, 'client not found')
     }
@@ -39,9 +54,12 @@ constructorr(){}
    
 
   // UPDATE
-  updateClient = (req: Request, res: Response) => {
+  updateClient = async (req: Request, res: Response) => {
     try{
+ const { IDclient, name, email, phone } = req.body.zanetizeClientInput;
 
+      const updateClient = await this.clientService.updateClient(IDclient, name, phone, email);
+      res.status(201).json(updateClient);
     } catch(e){
       handlerError(res, 'client not updated')
     }
@@ -49,9 +67,11 @@ constructorr(){}
     
 
   // DELETE
-  removeClient = (req: Request, res: Response)=> {
+  removeClient = async (req: Request, res: Response)=> {
     try{
-
+      const {IDclient} = req.body.zanetizeClientInput;
+      const deleteClient =  await this.clientService.deleteClient(IDclient);
+      res.status(200).json(deleteClient);
     } catch(e){
       handlerError(res, 'client not deleted')
     }
@@ -59,3 +79,4 @@ constructorr(){}
     
   
 }
+ 

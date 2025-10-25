@@ -19,7 +19,7 @@ __decorate([
     __metadata("design:type", Object)
 ], Client.prototype, "appointments", void 0);
 __decorate([
-    PrimaryKey(),
+    PrimaryKey({ autoincrement: true }),
     __metadata("design:type", Number)
 ], Client.prototype, "IDclient", void 0);
 __decorate([
@@ -27,11 +27,11 @@ __decorate([
     __metadata("design:type", String)
 ], Client.prototype, "name", void 0);
 __decorate([
-    Property(),
+    Property({ type: 'bigint' }),
     __metadata("design:type", Number)
 ], Client.prototype, "phone", void 0);
 __decorate([
-    Property({ nullable: true }),
+    Property(),
     __metadata("design:type", String)
 ], Client.prototype, "email", void 0);
 Client = __decorate([

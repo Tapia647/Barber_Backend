@@ -1,5 +1,4 @@
 import { Appointment } from "../entities/Appointment.js";
-import { AppointmentState } from "../entities/Appointment.js";
 import { EntityManager } from "@mikro-orm/core";
 import { AppointmentRepository } from "../shared/db/repository/appointment.repository.js";
 import { ClientService } from "./client.service.js";
@@ -14,7 +13,7 @@ export class AppointmentService {
 
   //create
   async createAppointment(dateAppointment: Date, time: string, IDclient: number): Promise <Appointment> {
-    const aclient = await this.clientService.getClient(IDclient);
+    const aclient = await this.clientService.getClientByID(IDclient);
     if (!aclient) {
       throw new Error('Client not found');
     } else { 
@@ -39,14 +38,14 @@ export class AppointmentService {
     return await this.appointmentRepository.getAppointments();
   }
 
-  async getAppointment(IDappointment: number): Promise< Appointment | null > {
+  async getAppointmentByID(IDappointment: number): Promise< Appointment | null > {
     return await this.appointmentRepository.getAppointmentById(IDappointment)
   }
 
 
   //Update
   async updateAppointment(dateAppointment: Date, time: string, IDclient: number): Promise <Appointment | null> {
-  const aclient = await this.clientService.getClient(IDclient);
+  const aclient = await this.clientService.getClientByID(IDclient);
   if (!aclient){
     throw Error ("Client not found")
   }
